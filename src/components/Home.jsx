@@ -1,23 +1,13 @@
 import * as React from 'react';
-import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import MuiDrawer from '@mui/material/Drawer';
 import Box from '@mui/material/Box';
-import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import Badge from '@mui/material/Badge';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 // import Link from '@mui/material/Link';
-import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import { Button, Card, CardActions, CardContent, CardMedia, List, Rating, Tooltip, useMediaQuery } from '@mui/material';
-import { mainListItems, secondaryListItems } from './listItems';
 import { useNavigate } from 'react-router-dom';
 import { BrowserRouter as Router, Link } from 'react-router-dom'; // Import BrowserRouter
 import img1 from '../assets/Hero_Homepage_Accessories_Family_Q4FY22_VP2-859x540.avif'
@@ -44,13 +34,8 @@ import 'swiper/css/scrollbar';
 import { Image } from 'react-bootstrap';
 
 import { useProductContext } from '../ProductContext';
-
-
-
-
-
-
-
+import { useDispatch, useSelector } from 'react-redux';
+import { addToCart, decreaseCartQuantity, increaseCartQuantity } from '../store/productsSlice';
 
 function Copyright(props) {
   return (
@@ -65,67 +50,15 @@ function Copyright(props) {
   );
 }
 
-const drawerWidth = 240;
-
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== 'open',
-})(({ theme, open }) => ({
-  zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(['width', 'margin'], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
-}));
-
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-  ({ theme, open }) => ({
-    '& .MuiDrawer-paper': {
-      position: 'relative',
-      whiteSpace: 'nowrap',
-      width: drawerWidth,
-      transition: theme.transitions.create('width', {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-      boxSizing: 'border-box',
-      ...(!open && {
-        overflowX: 'hidden',
-        transition: theme.transitions.create('width', {
-          easing: theme.transitions.easing.sharp,
-          duration: theme.transitions.duration.leavingScreen,
-        }),
-        width: theme.spacing(7),
-        [theme.breakpoints.up('sm')]: {
-          width: theme.spacing(9),
-        },
-      }),
-    },
-  }),
-);
-
-
-
-
-
-// TODO remove, this demo shouldn't need to reset the theme.
-const defaultTheme = createTheme();
-
 export default function Dashboard() {
   const isSmallerScreen = useMediaQuery('(max-width:500px)');
 
+  //* logic for apply redux
+  const { cartItems } = useSelector(state => state.productCount);
+  const dispatch = useDispatch()
+
   const [value, setValue] = React.useState(2);
   const Navigate = useNavigate()
-
-
-
 
   const [open, setOpen] = React.useState(false);
   const toggleDrawer = () => {
@@ -193,188 +126,6 @@ export default function Dashboard() {
 
   ];
 
-  const productListGamingPc = [
-    {
-      id: 1,
-      productName: 'Product 1',
-      description: 'Description for Product 1',
-      image: img7,
-      price: '$100'
-    },
-    {
-      id: 2,
-      productName: 'Product 2',
-      description: 'Description for Product 2',
-      image: img7,
-      price: '$100'
-    },
-    {
-      id: 3,
-      productName: 'Product 3',
-      description: 'Description for Product 3',
-      image: img7,
-      price: '$100'
-    },
-    {
-      id: 4,
-      productName: 'Product 4',
-      description: 'Description for Product 3',
-      image: img7,
-      price: '$100'
-    },
-    {
-      id: 5,
-      productName: 'Product 5',
-      description: 'Description for Product 5',
-      image: img7,
-      price: '$100'
-    },
-    {
-      id: 6,
-      productName: 'Product 6',
-      description: 'Description for Product 6',
-      image: img7,
-      price: '$100'
-    },
-    {
-      id: 7,
-      productName: 'Product 7',
-      description: 'Description for Product 7',
-      image: img7,
-      price: '$100'
-    },
-    {
-      id: 8,
-      productName: 'Product 8',
-      description: 'Description for Product 8',
-      image: img7,
-      price: '$100'
-    },
-
-  ];
-
-  const productListLaptops = [
-    {
-      id: 1,
-      productName: 'Product 1',
-      description: 'Description for Product 1',
-      image: img7,
-      price: '$100'
-    },
-    {
-      id: 2,
-      productName: 'Product 2',
-      description: 'Description for Product 2',
-      image: img7,
-      price: '$100'
-    },
-    {
-      id: 3,
-      productName: 'Product 3',
-      description: 'Description for Product 3',
-      image: img7,
-      price: '$100'
-    },
-    {
-      id: 4,
-      productName: 'Product 4',
-      description: 'Description for Product 3',
-      image: img7,
-      price: '$100'
-    },
-    {
-      id: 5,
-      productName: 'Product 5',
-      description: 'Description for Product 5',
-      image: img7,
-      price: '$100'
-    },
-    {
-      id: 6,
-      productName: 'Product 6',
-      description: 'Description for Product 6',
-      image: img7,
-      price: '$100'
-    },
-    {
-      id: 7,
-      productName: 'Product 7',
-      description: 'Description for Product 7',
-      image: img7,
-      price: '$100'
-    },
-    {
-      id: 8,
-      productName: 'Product 8',
-      description: 'Description for Product 8',
-      image: img7,
-      price: '$100'
-    },
-
-  ];
-
-  const productListAccesories = [
-    {
-      id: 1,
-      productName: 'Product 1',
-      description: 'Description for Product 1',
-      image: img7,
-      price: '$100'
-    },
-    {
-      id: 2,
-      productName: 'Product 2',
-      description: 'Description for Product 2',
-      image: img7,
-      price: '$100'
-    },
-    {
-      id: 3,
-      productName: 'Product 3',
-      description: 'Description for Product 3',
-      image: img7,
-      price: '$100'
-    },
-    {
-      id: 4,
-      productName: 'Product 4',
-      description: 'Description for Product 3',
-      image: img7,
-      price: '$100'
-    },
-    {
-      id: 5,
-      productName: 'Product 5',
-      description: 'Description for Product 5',
-      image: img7,
-      price: '$100'
-    },
-    {
-      id: 6,
-      productName: 'Product 6',
-      description: 'Description for Product 6',
-      image: img7,
-      price: '$100'
-    },
-    {
-      id: 7,
-      productName: 'Product 7',
-      description: 'Description for Product 7',
-      image: img7,
-      price: '$100'
-    },
-    {
-      id: 8,
-      productName: 'Product 8',
-      description: 'Description for Product 8',
-      image: img7,
-      price: '$100'
-    },
-
-  ];
-
-
-
   const { setSelectedProduct } = useProductContext();
 
   const HandlePlaceOrder = (product) => {
@@ -385,8 +136,6 @@ export default function Dashboard() {
 
   }
 
-
-
   const downloadImage = (imageSrc, imageName) => {
     const link = document.createElement('a');
     link.href = imageSrc;
@@ -396,97 +145,10 @@ export default function Dashboard() {
     document.body.removeChild(link);
   };
 
-
-
-
-
-
   return (
 
-    <ThemeProvider theme={defaultTheme}>
-      <Box sx={{ display: 'flex' }}>
-        <CssBaseline />
-        <AppBar position="absolute" open={open}>
-          <Toolbar
-            sx={{
-              pr: '24px', // keep right padding when drawer closed
-            }}
-          >
-            <IconButton
-              edge="start"
-              color="inherit"
-              aria-label="open drawer"
-              onClick={toggleDrawer}
-              sx={{
-                marginRight: '36px',
-                ...(open && { display: 'none' }),
-              }}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography
-              component="h1"
-              variant="h6"
-              color="inherit"
-              noWrap
-              sx={{ flexGrow: 1, fontSize: isSmallerScreen ? '0.7rem' : '1.5rem' }}
-            >
-              TECH-VERSE
-            </Typography>
+        <Box>
 
-            <div style={{ display: 'flex', gap: '5px' }}>
-
-              <Link to='/SignIn'>
-                <Button variant="contained" color='success'>Login</Button>
-              </Link>
-              <Link to='/register'>
-
-                <Button variant="contained" color='secondary'>Register</Button>
-
-              </Link>
-
-
-            </div>
-
-
-
-          </Toolbar>
-        </AppBar>
-        <Drawer variant="permanent" open={open}>
-          <Toolbar
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-              px: [1],
-            }}
-          >
-            <IconButton onClick={toggleDrawer}>
-              <ChevronLeftIcon />
-            </IconButton>
-          </Toolbar>
-          <Divider />
-          <List component="nav">
-            {mainListItems}
-            <Divider sx={{ my: 1 }} />
-            {secondaryListItems}
-          </List>
-        </Drawer>
-
-
-        <Box
-          component="main"
-          sx={{
-            backgroundColor: (theme) =>
-              theme.palette.mode === 'light'
-                ? theme.palette.grey[100]
-                : theme.palette.grey[900],
-            flexGrow: 1,
-            height: '100vh',
-            overflow: 'auto',
-          }}
-        >
-          <Toolbar />
           <Swiper
             // install Swiper modules
             modules={[Navigation, Pagination, Scrollbar, A11y]}
@@ -506,9 +168,6 @@ export default function Dashboard() {
 
             ...
           </Swiper>
-
-
-
 
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
@@ -582,12 +241,14 @@ export default function Dashboard() {
                       <CardActions>
 
                         <div style={{ display: 'flex', gap: '7rem' }}>
-                          <Button variant="contained" size="small" onClick={() => HandlePlaceOrder(product)}>
-                            Place Order
+                          <Button variant="contained" size="small" 
+                          onClick={() => {
+                            let item = null;
+                            item = {...product, quantity: 1};
+                            dispatch(addToCart(item));}}>
+                            Add Product
                           </Button>
-                          
-
-
+                          {/* onClick={() => HandlePlaceOrder(product)} */}
                           <Tooltip title="Download Product">
                            
                               <ArrowDownwardIcon onClick={() => downloadImage(product.image, product.productName)} />
@@ -611,16 +272,7 @@ export default function Dashboard() {
             <Copyright sx={{ pt: 4 }} />
           </Container>
 
-
         </Box>
-      </Box>
-
-      
-    </ThemeProvider>
-
-                   
-
- 
   );
 
 }

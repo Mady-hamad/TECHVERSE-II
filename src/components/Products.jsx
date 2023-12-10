@@ -225,9 +225,7 @@ const Products = () => {
                           <Button variant="contained" size="small" onClick={() => HandlePlaceOrder(product)}>
                             Place Order
                           </Button>
-                          
-
-
+                        
                           <Tooltip title="Download Product">
                            
                               <ArrowDownwardIcon onClick={() => downloadImage(product.image, product.productName)} />
@@ -241,10 +239,7 @@ const Products = () => {
                   </Grid>
                 ))}
               </Grid>
-            </Grid>
-            
-                     
-                        
+            </Grid>                        
 
             <Copyright sx={{ pt: 4 }} />
           </Container>

@@ -1,66 +1,56 @@
 // CheckoutPage.js
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { useProductContext } from '../ProductContext';
-import { Button, Card, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { Box, Button, Card, Divider, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { useNavigate } from 'react-router-dom';
 import { Image } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
+import img7 from '../assets/airdot.webp'
+import { decrementQ, incrementQ, removeFromCart } from '../store/productsSlice';
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap" rel="stylesheet"></link>
 const CheckoutPage= () => {
   const [province, setProvince] = React.useState('');
+  //* logic for apply redux
+  const { cartItems } = useSelector(state => state.productCount);
+  const dispatch = useDispatch();
 
   const Navigate = useNavigate()
 
   const handleChange = (event) => {
     setProvince(event.target.value);
   };
-  const { selectedProduct } = useProductContext();
 
   const [quantity, setQuantity] = useState(1);
   const [userProfit, setUserProfit] = useState(0);
+  const [itemProfits, setItemProfits] = useState({});
 
-
-  const handleIncrement = () => {
-    setQuantity(quantity + 1);
+  const calculateItemProfit = (item, profitValue) => {
+    setItemProfits((prevProfits) => ({
+      ...prevProfits,
+      [item.id]: profitValue,
+    }));
   };
 
-  const handleDecrement = () => {
-    setQuantity(quantity - 1 > 0 ? quantity - 1 : 1); // Ensure quantity doesn't go below 1
-  };
-
-  const handleProfitChange = (event) => {
-    setUserProfit(parseFloat(event.target.value) || 0);
-  };
-
+  const totalProfit = Object.values(itemProfits).reduce((acc, profit) => acc + profit, 0);
 
   const handleCheckoutButton = ()=>{
-
     Navigate('/checkout/payment')
-
-    
   }
 
   const handleCancelButton = ()=>{
-
     Navigate('/')
-
-    
   }
 
-  console.log(`profit handle==>` ,handleProfitChange)
   const deliveryPrice = 120;
 
 
-  const selectedProductPrice = selectedProduct && selectedProduct.price;
+  const selectedProductPrice = cartItems && cartItems.price;
   const priceWithoutCurrency = selectedProductPrice ? +selectedProductPrice.replace('$', '') : 0;
   const totalPrice = priceWithoutCurrency * quantity + userProfit + deliveryPrice;
-
-      console.log(`total price==>` , totalPrice)
-
-      console.log(selectedProduct);
 
 
      
@@ -226,37 +216,43 @@ const CheckoutPage= () => {
   <div style={{padding:'20px', fontFamily:'sans-serif'}} className="child2">
     <Card style={{backgroundColor:'#fafafa', marginTop:'5rem' , borderRadius:'5px'}} variant="outlined">
       <h2>Order Summary</h2>
-      {selectedProduct && (
-        <>
-       <img src={selectedProduct.image} style={{borderRadius:'5px', height:'100px'}} alt="" />
-          <p>Name: {selectedProduct.productName}</p>
-          <p>Price: {selectedProduct.price}</p>
-          <p>Quantity: {quantity}</p>
-          <p>Delievery Price: {deliveryPrice}</p>
-          <Button variant="outlined" onClick={handleIncrement}>
-            +
-          </Button> 
-          <Button variant="outlined"  onClick={handleDecrement}>
-            -
-          </Button>
-          <p>My Profit: </p>
-          <TextField
-           
-            value={userProfit}
-            onChange={handleProfitChange}
-          />
-          <p>Total Price: {totalPrice}</p>
-
-          <div style={{display:'flex',  gap:'5px' , justifyContent:'center'}}>
-          <Button style={{marginBottom:'1rem'}} variant='contained'onClick={handleCheckoutButton}>Checkout</Button>
-
-
-
-          <Button  style={{marginBottom:'1rem' , backgroundColor:'red'}} variant='contained'onClick={handleCancelButton}>Cancel</Button>
-          
-
-          </div>
-        </>
+      {cartItems.length > 0 && (
+        <Fragment>
+        {cartItems.map((item,index)=>(
+          <Box>
+            <Box key={index} sx={{display:"flex", justifyContent:"space-evenly", py:1}}>
+            <Box>
+  
+         <img src={item.image} style={{borderRadius:'5px', height:'100px'}} alt="ProductImage" />
+            </Box>
+            <Box>
+            <p>Name: {item.productName}</p>
+            <p>Price: {item.price}</p>
+            <p>Delievery Price: {deliveryPrice}</p>
+            <p>Quantity: {item.quantity}</p>
+            <Button variant="outlined" onClick={() => dispatch(incrementQ(item))}>
+              +
+            </Button> 
+            <Button variant="outlined" onClick={() => dispatch(decrementQ(item))}>
+              -
+            </Button>
+            </Box>
+            <Box>
+            <p>My Profit: </p>
+            <TextField  value={itemProfits[item.id] || 0} onChange={(event) => calculateItemProfit(item, parseFloat(event.target.value))} />
+            <p>Total Price: {itemProfits[index]}</p>
+            <Button variant="contained" color="error" onClick={() => dispatch(removeFromCart(item))}> Remove </Button>
+            </Box>
+          </Box>
+            <Divider/>
+            </Box>
+            ))}
+            <div style={{display:'flex',  gap:'5px' , justifyContent:'center', paddingTop:"16px"}}>
+            <Button style={{marginBottom:'1rem'}} variant='contained'onClick={handleCheckoutButton}>Checkout</Button>
+            <Button  style={{marginBottom:'1rem' , backgroundColor:'red'}} variant='contained'onClick={handleCancelButton}>Cancel</Button>
+            <p>Total Profit: {totalProfit}</p>
+            </div>
+            </Fragment>
       )}
     </Card>
     </div>
